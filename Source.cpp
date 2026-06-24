@@ -3,6 +3,8 @@
 
 using Bitboard = uint64_t;
 
+
+
 enum Square
 {
     a1, b1, c1, d1, e1, f1, g1, h1,  // rank 1 — bits 0-7
@@ -46,6 +48,170 @@ Bitboard black_bishops = 0x2400000000000000ULL; // c8 and f8 — bits 58 and 61
 Bitboard black_queen = 0x0800000000000000ULL; // d8 — bit 59
 Bitboard black_king = 0x1000000000000000ULL; // e8 — bit 60
 
+Bitboard white_ocuupency = white_pawns | white_rooks | white_knights | white_bishops | white_queen | white_king;
+Bitboard black_ocuupency = black_pawns | black_rooks | black_knights | black_bishops | black_queen | black_king;
+Bitboard all_occupency = white_ocuupency | black_ocuupency;
+
+enum visualPiece
+{
+	EMPTY_SQUARE = '.',
+	WHITE_PAWN_SQUARE = 'P',
+	WHITE_KNIGHT_SQUARE = 'N',
+	WHITE_BISHOP_SQUARE = 'B',
+	WHITE_ROOK_SQUARE = 'R',
+	WHITE_QUEEN_SQUARE = 'Q',
+	WHITE_KING_SQUARE = 'K',
+	BLACK_PAWN_SQUARE = 'p',
+	BLACK_KNIGHT_SQUARE = 'n',
+	BLACK_BISHOP_SQUARE = 'b',
+	BLACK_ROOK_SQUARE = 'r',
+	BLACK_QUEEN_SQUARE = 'q',
+	BLACK_KING_SQUARE = 'k'
+};
+
+char VisualBoard[64];
+
+void updateVisualBoard()
+{
+	for (int square = 0; square < 64; ++square)
+	{
+		if ((white_pawns >> square) & 1ULL) VisualBoard[square] = WHITE_PAWN_SQUARE;
+		else if ((white_rooks >> square) & 1ULL) VisualBoard[square] = WHITE_ROOK_SQUARE;
+		else if ((white_knights >> square) & 1ULL) VisualBoard[square] = WHITE_KNIGHT_SQUARE;
+		else if ((white_bishops >> square) & 1ULL) VisualBoard[square] = WHITE_BISHOP_SQUARE;
+		else if ((white_queen >> square) & 1ULL) VisualBoard[square] = WHITE_QUEEN_SQUARE;
+		else if ((white_king >> square) & 1ULL) VisualBoard[square] = WHITE_KING_SQUARE;
+		else if ((black_pawns >> square) & 1ULL) VisualBoard[square] = BLACK_PAWN_SQUARE;
+		else if ((black_rooks >> square) & 1ULL) VisualBoard[square] = BLACK_ROOK_SQUARE;
+		else if ((black_knights >> square) & 1ULL) VisualBoard[square] = BLACK_KNIGHT_SQUARE;
+		else if ((black_bishops >> square) & 1ULL) VisualBoard[square] = BLACK_BISHOP_SQUARE;
+		else if ((black_queen >> square) & 1ULL) VisualBoard[square] = BLACK_QUEEN_SQUARE;
+		else if ((black_king >> square) & 1ULL) VisualBoard[square] = BLACK_KING_SQUARE;
+		else VisualBoard[square] = EMPTY_SQUARE;
+	}
+}
+
+bool checkIfRookPathClear(Bitboard board, int fromSquare, int toSquare)
+{
+	int fromRank = fromSquare / 8;
+	int fromFile = fromSquare % 8;
+	int toRank = toSquare / 8;
+	int toFile = toSquare % 8;
+
+	if (fromRank == toRank)
+	{
+		int startFile = std::min(fromFile, toFile) + 1;
+		int endFile = std::max(fromFile, toFile);
+		for (int file = startFile; file < endFile; ++file)
+		{
+			int square = fromRank * 8 + file;
+			if (checkIfSquareOccupied(board, square))
+				return false;
+		}
+	}
+
+	else if (fromFile == toFile)
+	{
+		int startRank = std::min(fromRank, toRank) + 1;
+		int endRank = std::max(fromRank, toRank);
+		for (int rank = startRank; rank < endRank; ++rank)
+		{
+			int square = rank * 8 + fromFile;
+			if (checkIfSquareOccupied(board, square))
+				return false;
+		}
+	}
+	else
+	{
+		return false; // Not a valid rook move
+	}
+	return true; // Path is clear
+}
+
+bool checkIfBishopPathClear(Bitboard board, int fromSquare, int toSquare)
+{
+	int fromRank = fromSquare / 8;
+	int fromFile = fromSquare % 8;
+	int toRank = toSquare / 8;
+	int toFile = toSquare % 8;
+
+	if (abs(toRank - fromRank) != abs(toFile - fromFile))
+		return false; // Not a valid bishop move
+
+	int rankStep = (toRank > fromRank) ? 1 : -1;
+	int fileStep = (toFile > fromFile) ? 1 : -1;
+	int currentRank = fromRank + rankStep;
+	int currentFile = fromFile + fileStep;
+
+	while (currentRank != toRank && currentFile != toFile)
+	{
+		int square = currentRank * 8 + currentFile;
+		if (checkIfSquareOccupied(board, square))
+			return false; // Path is blocked
+		currentRank += rankStep;
+		currentFile += fileStep;
+	}
+	return true; // Path is clear
+}
+
+bool checkIfQueenPathClear(Bitboard board, int fromSquare, int toSquare)
+{
+	return checkIfRookPathClear(board, fromSquare, toSquare) || checkIfBishopPathClear(board, fromSquare, toSquare);
+}
+
+bool checkIfPawnPathClear(Bitboard board, int fromSquare, int toSquare)
+{
+	int fromRank = fromSquare / 8;
+	int fromFile = fromSquare % 8;
+	int toRank = toSquare / 8;
+	int toFile = toSquare % 8;
+
+	if (fromFile == toFile)
+	{
+		if (toRank == fromRank + 1 || (fromRank == 1 && toRank == fromRank + 2))
+		{
+			return !checkIfSquareOccupied(board, toSquare);
+		}
+	}
+
+	else if (abs(toFile - fromFile) == 1 && toRank == fromRank + 1)
+	{
+		return checkIfSquareOccupied(board, toSquare);
+	}
+	return false; // Invalid pawn move
+}
+
+bool checkIfKingPathClear(Bitboard board, int fromSquare, int toSquare)
+{
+	int fromRank = fromSquare / 8;
+	int fromFile = fromSquare % 8;
+	int toRank = toSquare / 8;
+	int toFile = toSquare % 8;
+	if (abs(toRank - fromRank) <= 1 && abs(toFile - fromFile) <= 1)
+	{
+		return !checkIfSquareOccupied(board, toSquare);
+	}
+	return false; // Invalid king move
+}
+
+bool checkIfSquareOccupied(Bitboard board, int square)
+{
+	return (board >> square) & 1ULL;
+}
+
+void printVisualBoard()
+{
+	for (int rank = 7; rank >= 0; --rank)
+	{
+		for (int file = 0; file < 8; ++file)
+		{
+			int square = rank * 8 + file;
+			std::cout << VisualBoard[square] << " ";
+		}
+		std::cout << std::endl;
+	}
+}
+
 void printBitboard(Bitboard bb)
 {
 	for (int rank = 7; rank >= 0; --rank)
@@ -66,12 +232,112 @@ void makeMove(Bitboard& board, int fromSquare, int toSquare)
     board |= (1ULL << toSquare);
 }
 
+void checkRookMovement(Bitboard& board, int fromSquare, int toSquare)
+{
+    int fromRank = fromSquare / 8;
+    int fromFile = fromSquare % 8;
+    int toRank = toSquare / 8;
+    int toFile = toSquare % 8;
+    if (fromRank == toRank || fromFile == toFile)
+    {
+        makeMove(board, fromSquare, toSquare);
+    }
+    else
+    {
+        std::cout << "Invalid move for a rook!" << std::endl;
+    }
+}
+
+void checkKnightMovement(Bitboard& board, int fromSquare, int toSquare)
+{
+	int fromRank = fromSquare / 8;
+	int fromFile = fromSquare % 8;
+	int toRank = toSquare / 8;
+	int toFile = toSquare % 8;
+	int rankDiff = abs(toRank - fromRank);
+	int fileDiff = abs(toFile - fromFile);
+	if ((rankDiff == 2 && fileDiff == 1) || (rankDiff == 1 && fileDiff == 2))
+	{
+		makeMove(board, fromSquare, toSquare);
+	}
+	else
+	{
+		std::cout << "Invalid move for a knight!" << std::endl;
+	}
+}
+
+void checkBishopMovement(Bitboard& board, int fromSquare, int toSquare)
+{
+	int fromRank = fromSquare / 8;
+	int fromFile = fromSquare % 8;
+	int toRank = toSquare / 8;
+	int toFile = toSquare % 8;
+	if (abs(toRank - fromRank) == abs(toFile - fromFile))
+	{
+		makeMove(board, fromSquare, toSquare);
+	}
+	else
+	{
+		std::cout << "Invalid move for a bishop!" << std::endl;
+	}
+}
+
+void checkQueenMovement(Bitboard& board, int fromSquare, int toSquare)
+{
+	int fromRank = fromSquare / 8;
+	int fromFile = fromSquare % 8;
+	int toRank = toSquare / 8;
+	int toFile = toSquare % 8;
+	if (fromRank == toRank || fromFile == toFile || abs(toRank - fromRank) == abs(toFile - fromFile))
+	{
+		makeMove(board, fromSquare, toSquare);
+	}
+	else
+	{
+		std::cout << "Invalid move for a queen!" << std::endl;
+	}
+}
+
+void checkKingMovement(Bitboard& board, int fromSquare, int toSquare)
+{
+	int fromRank = fromSquare / 8;
+	int fromFile = fromSquare % 8;
+	int toRank = toSquare / 8;
+	int toFile = toSquare % 8;
+	if (abs(toRank - fromRank) <= 1 && abs(toFile - fromFile) <= 1)
+	{
+		makeMove(board, fromSquare, toSquare);
+	}
+	else
+	{
+		std::cout << "Invalid move for a king!" << std::endl;
+	}
+}
+
+void checkPawnMovement(Bitboard& board, int fromSquare, int toSquare)
+{
+	int fromRank = fromSquare / 8;
+	int fromFile = fromSquare % 8;
+	int toRank = toSquare / 8;
+	int toFile = toSquare % 8;
+	if (fromFile == toFile && (abs(toRank - fromRank) == 1 || (fromRank == 1 && abs (toRank - fromRank) == 2)))
+	{
+		makeMove(board, fromSquare, toSquare);
+	}
+	else
+	{
+		std::cout << "Invalid move for a pawn!" << std::endl;
+	}
+}
+
 int main()
 {
-    printBitboard(white_knights);
+	updateVisualBoard();
+	printVisualBoard();
     std::cout << std::endl;
-	makeMove(white_knights, b1, c3); // Move white pawn from e2 to e4
-	printBitboard(white_knights);
+	checkKnightMovement(white_knights, b1, c3);
+	updateVisualBoard();
+	printVisualBoard();
 
 	return 0;
 }
