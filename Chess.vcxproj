@@ -139,7 +139,16 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="..\..\..\Downloads\files\board.cpp" />
+    <ClCompile Include="..\..\..\Downloads\files\display.cpp" />
+    <ClCompile Include="..\..\..\Downloads\files\main.cpp" />
+    <ClCompile Include="..\..\..\Downloads\files\movegen.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Downloads\files\board.h" />
+    <ClInclude Include="..\..\..\Downloads\files\display.h" />
+    <ClInclude Include="..\..\..\Downloads\files\movegen.h" />
+    <ClInclude Include="..\..\..\Downloads\files\types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
