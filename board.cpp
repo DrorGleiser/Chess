@@ -17,9 +17,9 @@ Bitboard black_king = 0x1000000000000000ULL; // e8 — bit 60
 
 // NOTE: computed once at startup, like before. These go stale after a move until
 // you add a recompute step — that's the occupancy fix from the review, left for you.
-Bitboard white_ocuupency = white_pawns | white_rooks | white_knights | white_bishops | white_queen | white_king;
-Bitboard black_ocuupency = black_pawns | black_rooks | black_knights | black_bishops | black_queen | black_king;
-Bitboard all_occupency = white_ocuupency | black_ocuupency;
+Bitboard white_occupency = white_pawns | white_rooks | white_knights | white_bishops | white_queen | white_king;
+Bitboard black_occupency = black_pawns | black_rooks | black_knights | black_bishops | black_queen | black_king;
+Bitboard all_occupency = white_occupency | black_occupency;
 
 void makeMove(Bitboard& board, int fromSquare, int toSquare)
 {

@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{30e4f8e4-8dd1-4bd1-91a1-ac6cd75ba5c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets">
+      <UniqueIdentifier>{824f8f8a-c6cc-4fde-973c-9dea967363d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\pieces">
+      <UniqueIdentifier>{543e7dcd-78c8-425c-9b34-fd4cde07173f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="board.cpp">
@@ -26,6 +35,21 @@
     </ClCompile>
     <ClCompile Include="movegen.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mailbox.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="textures.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_main.cpp">
+      <Filter>gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -41,5 +65,55 @@
     <ClInclude Include="types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="mailbox.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="textures.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Downloads\wP.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\wN.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\wK.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\wB.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\bR.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\bQ.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\bP.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\bN.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\bK.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\bB.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\wR.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
+    <None Include="..\..\..\Downloads\wQ.svg">
+      <Filter>assets\pieces</Filter>
+    </None>
   </ItemGroup>
 </Project>
