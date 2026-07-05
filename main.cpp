@@ -1,37 +1,80 @@
-//#include "board.h"
-//#include "display.h"
-//#include "movegen.h"
-//#include <iostream>
-//
-//int main()
-//{
-//    
-//    // ---- PAWN (white) ----
-//    printBitboard(pawnTargets(11, 0x0000000000000000ULL, 0x0000000000000000ULL, true));  // d2 empty            -> 0x0000000008080000
-//    std::cout << std::endl;
-//    printBitboard(pawnTargets(11, 0x0000000000080000ULL, 0x0000000000000000ULL, true));  // d2 enemy on d3      -> 0x0000000000000000
-//    std::cout << std::endl;
-//    printBitboard(pawnTargets(27, 0x0000001400000000ULL, 0x0000000000000000ULL, true));  // d4 en c5 + e5       -> 0x0000001C00000000
-//    std::cout << std::endl;
-//    printBitboard(pawnTargets(27, 0x0000001000000000ULL, 0x0000001000000000ULL, true));  // d4 friendly on e5   -> 0x0000000800000000
-//    std::cout << std::endl;
-//    printBitboard(pawnTargets(31, 0x0000010000000000ULL, 0x0000000000000000ULL, true));  // h4 en a6 (wrap)     -> 0x0000008000000000
-//    std::cout << std::endl;
-//    printBitboard(pawnTargets(0, 0x0000000000000000ULL, 0x0000000000000000ULL, true));  // a1 corner (edge)    -> 0x0000000000000100
-//    std::cout << std::endl;
-//
-//    // ---- PAWN (black) ----
-//    printBitboard(pawnTargets(51, 0x0000000000000000ULL, 0x0000000000000000ULL, false)); // d7 empty            -> 0x0000080800000000
-//    std::cout << std::endl;
-//    printBitboard(pawnTargets(51, 0x0000080000000000ULL, 0x0000000000000000ULL, false)); // d7 enemy on d6      -> 0x0000000000000000
-//    std::cout << std::endl;
-//    printBitboard(pawnTargets(35, 0x0000000014000000ULL, 0x0000000000000000ULL, false)); // d5 en c4 + e4       -> 0x000000001C000000
-//    std::cout << std::endl;
-//    printBitboard(pawnTargets(32, 0x0000000080000000ULL, 0x0000000000000000ULL, false)); // a5 en h4 (wrap)     -> 0x0000000001000000
-//    std::cout << std::endl;
-//    printBitboard(pawnTargets(11, 0x0000000000000000ULL, 0x0000000000000000ULL, false)); // d2 push to d1 (edge)-> 0x0000000000000008
-//    std::cout << std::endl;
-//
-//    
-//    return 0;
-//}
+#include "board.h"
+#include "display.h"
+#include "movegen.h"
+#include <iostream>
+#include <string>
+
+// Converts "e2" -> square index, or -1 if the text is invalid
+int parseSquare(char fileChar, char rankChar)
+{
+	if (fileChar < 'a' || fileChar > 'h') return -1;
+	if (rankChar < '1' || rankChar > '8') return -1;
+
+	int file = fileChar - 'a';
+	int rank = rankChar - '1';
+	return rank * 8 + file;
+}
+
+int main()
+{
+	bool isWhiteTurn = true;
+	std::string input;
+
+	refreshOccupancy();
+
+	while (true)
+	{
+		updateVisualBoard();
+		printVisualBoard();
+		std::cout << std::endl;
+
+		std::cout << (isWhiteTurn ? "White" : "Black") << " to move (e.g. e2e4, q to quit): ";
+		std::cin >> input;
+
+		if (input == "q")
+			break;
+
+		if (input.length() != 4)
+		{
+			std::cout << "Bad format - four characters like e2e4." << std::endl;
+			continue;
+		}
+
+		int fromSquare = parseSquare(input[0], input[1]);
+		int toSquare = parseSquare(input[2], input[3]);
+
+		if (fromSquare == -1 || toSquare == -1)
+		{
+			std::cout << "Bad squares - files a-h, ranks 1-8." << std::endl;
+			continue;
+		}
+
+		// Gate 1: is there a piece at all?
+		Piece mover = pieceAt(fromSquare);
+		if (mover == EMPTY)
+		{
+			std::cout << "No piece on that square." << std::endl;
+			continue;
+		}
+
+		// Gate 2: is it yours?
+		bool moverIsWhite = (mover >= WHITE_PAWN && mover <= WHITE_KING);
+		if (moverIsWhite != isWhiteTurn)
+		{
+			std::cout << "That piece isn't yours." << std::endl;
+			continue;
+		}
+
+		// Gate 3: can it actually go there?
+		if (!(targetsFor(mover, fromSquare) & (1ULL << toSquare)))
+		{
+			std::cout << "That piece can't move there." << std::endl;
+			continue;
+		}
+
+		makeMove(fromSquare, toSquare);
+		isWhiteTurn = !isWhiteTurn;
+	}
+
+	return 0;
+}

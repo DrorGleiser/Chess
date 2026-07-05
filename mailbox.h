@@ -1,2 +1,4 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include "types.h"
+
+void toMailbox(Piece out[64]);

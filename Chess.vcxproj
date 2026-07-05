@@ -163,18 +163,18 @@
     <ClInclude Include="types.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Downloads\bB.svg" />
-    <None Include="..\..\..\Downloads\bK.svg" />
-    <None Include="..\..\..\Downloads\bN.svg" />
-    <None Include="..\..\..\Downloads\bP.svg" />
-    <None Include="..\..\..\Downloads\bQ.svg" />
-    <None Include="..\..\..\Downloads\bR.svg" />
-    <None Include="..\..\..\Downloads\wB.svg" />
-    <None Include="..\..\..\Downloads\wK.svg" />
-    <None Include="..\..\..\Downloads\wN.svg" />
-    <None Include="..\..\..\Downloads\wP.svg" />
-    <None Include="..\..\..\Downloads\wQ.svg" />
-    <None Include="..\..\..\Downloads\wR.svg" />
+    <Image Include="pieces\bB.png" />
+    <Image Include="pieces\bK.png" />
+    <Image Include="pieces\bN.png" />
+    <Image Include="pieces\bP.png" />
+    <Image Include="pieces\bQ.png" />
+    <Image Include="pieces\bR.png" />
+    <Image Include="pieces\wB.png" />
+    <Image Include="pieces\wK.png" />
+    <Image Include="pieces\wN.png" />
+    <Image Include="pieces\wP.png" />
+    <Image Include="pieces\wQ.png" />
+    <Image Include="pieces\wR.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

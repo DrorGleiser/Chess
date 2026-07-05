@@ -188,3 +188,26 @@ Bitboard pawnTargets(int square, Bitboard allOccupancy, Bitboard ownOccupancy, b
 
     return targets;
 }
+
+Bitboard targetsFor(Piece piece, int square)
+{
+    switch (piece)
+    {
+    case WHITE_PAWN:   return pawnTargets(square, all_occupancy, white_occupancy, true);
+    case WHITE_KNIGHT: return knightTargets(square, all_occupancy, white_occupancy);
+    case WHITE_BISHOP: return bishopTargets(square, all_occupancy, white_occupancy);
+    case WHITE_ROOK:   return rookTargets(square, all_occupancy, white_occupancy);
+    case WHITE_QUEEN:  return queenTargets(square, all_occupancy, white_occupancy);
+    case WHITE_KING:   return kingTargets(square, all_occupancy, white_occupancy);
+
+    case BLACK_PAWN:   return pawnTargets(square, all_occupancy, black_occupancy, false);
+    case BLACK_KNIGHT: return knightTargets(square, all_occupancy, black_occupancy);
+    case BLACK_BISHOP: return bishopTargets(square, all_occupancy, black_occupancy);
+    case BLACK_ROOK:   return rookTargets(square, all_occupancy, black_occupancy);
+    case BLACK_QUEEN:  return queenTargets(square, all_occupancy, black_occupancy);
+    case BLACK_KING:   return kingTargets(square, all_occupancy, black_occupancy);
+
+    default:
+        return 0ULL;
+    }
+}

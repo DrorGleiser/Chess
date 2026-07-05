@@ -79,41 +79,41 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Downloads\wP.svg">
+    <Image Include="pieces\bB.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\wN.svg">
+    </Image>
+    <Image Include="pieces\bK.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\wK.svg">
+    </Image>
+    <Image Include="pieces\bN.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\wB.svg">
+    </Image>
+    <Image Include="pieces\bP.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\bR.svg">
+    </Image>
+    <Image Include="pieces\bQ.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\bQ.svg">
+    </Image>
+    <Image Include="pieces\bR.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\bP.svg">
+    </Image>
+    <Image Include="pieces\wB.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\bN.svg">
+    </Image>
+    <Image Include="pieces\wK.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\bK.svg">
+    </Image>
+    <Image Include="pieces\wN.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\bB.svg">
+    </Image>
+    <Image Include="pieces\wP.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\wR.svg">
+    </Image>
+    <Image Include="pieces\wQ.png">
       <Filter>assets\pieces</Filter>
-    </None>
-    <None Include="..\..\..\Downloads\wQ.svg">
+    </Image>
+    <Image Include="pieces\wR.png">
       <Filter>assets\pieces</Filter>
-    </None>
+    </Image>
   </ItemGroup>
 </Project>
