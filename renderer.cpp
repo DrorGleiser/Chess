@@ -19,10 +19,39 @@ Renderer::Renderer()
         pieceTextures[p].setSmooth(true);   // nicer scaling
 }
 
-void Renderer::draw(sf::RenderWindow& window, const Piece mailbox[64])
+void Renderer::draw(sf::RenderWindow& window, const Piece mailbox[64],
+    int selectedSquare, Bitboard targets)
 {
     drawSquares(window);
-    drawPieces(window, mailbox);   // order matters: pieces on top
+    drawHighlights(window, selectedSquare, targets); 
+    drawPieces(window, mailbox);
+}
+
+void Renderer::drawHighlights(sf::RenderWindow& window, int selectedSquare, Bitboard targets)
+{
+    if (selectedSquare == -1) return;
+
+    // yellow overlay on the picked square
+    sf::RectangleShape overlay({ float(TILE), float(TILE) });
+    overlay.setFillColor(sf::Color(246, 234, 105, 150));   // alpha 150 = translucent
+    overlay.setPosition({ float(selectedSquare % 8 * TILE),
+                          float((7 - selectedSquare / 8) * TILE) });
+    window.draw(overlay);
+
+    // a dot on every set bit of the targets bitboard
+    const float r = TILE / 6.f;
+    sf::CircleShape dot(r);
+    dot.setFillColor(sf::Color(0, 0, 0, 70));
+
+    for (int sq = 0; sq < 64; ++sq)
+    {
+        if (!(targets & (1ULL << sq)))
+            continue;
+
+        dot.setPosition({ sq % 8 * TILE + TILE / 2.f - r,
+                          (7 - sq / 8) * TILE + TILE / 2.f - r });
+        window.draw(dot);
+    }
 }
 
 void Renderer::drawSquares(sf::RenderWindow& window)
